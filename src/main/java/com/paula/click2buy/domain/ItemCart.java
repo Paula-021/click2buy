@@ -1,39 +1,37 @@
 package com.paula.click2buy.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class ItemCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    //private product product;
-    private int quantity;
+    private Long id;
+    @OneToOne
+    private Product product;
+    private Integer quantity;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-   // public product getProduct() {
-    //    return product;
-   // }
+    public Product getProduct() {
+        return product;
+    }
 
-   //public void setProduct(product product) {
-    //    this.product = product;
-   // }
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }

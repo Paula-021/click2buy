@@ -1,9 +1,6 @@
 package com.paula.click2buy.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -13,10 +10,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double totalPrice;
+    @OneToOne
     private Address deliveryAddress;
     private LocalDate expectedDeliveryDate;
     private LocalDate deliveryDate;
     private LocalDate orderDate;
+    @OneToOne
     private User user;
     private PaymentMethod paymentMethod;
 

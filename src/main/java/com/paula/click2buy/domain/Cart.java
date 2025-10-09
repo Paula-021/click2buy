@@ -1,9 +1,6 @@
 package com.paula.click2buy.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -11,14 +8,16 @@ import java.util.List;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private List<ItemCart> listItemCart ;
+    private Long id;
 
-    public long getId() {
+    @OneToMany(mappedBy = "cart")
+    private List<ItemCart> listItemCart;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
