@@ -10,7 +10,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany
     private List<ItemCart> listItemCart;
 
     public Long getId() {
