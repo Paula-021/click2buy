@@ -13,7 +13,6 @@ public class User {
     private String name;
     private String email;
     private String telephone;
-    private String login;
     private String password;
     private String cpf;
 
@@ -49,13 +48,6 @@ public class User {
         this.telephone = telephone;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
 
     public String getPassword() {
         return password;
