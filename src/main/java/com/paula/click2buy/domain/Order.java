@@ -3,6 +3,7 @@ package com.paula.click2buy.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Order {
@@ -15,7 +16,7 @@ public class Order {
     private LocalDate expectedDeliveryDate;
     private LocalDate deliveryDate;
     private LocalDate orderDate;
-    @OneToOne
+    @ManyToOne
     private User user;
     private PaymentMethod paymentMethod;
 
