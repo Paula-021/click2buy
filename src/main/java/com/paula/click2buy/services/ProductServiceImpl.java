@@ -3,7 +3,6 @@ package com.paula.click2buy.services;
 import com.paula.click2buy.domain.Product;
 import com.paula.click2buy.exceptions.ProductNotFoundException;
 import com.paula.click2buy.repositories.ProductRepository;
-import com.paula.click2buy.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +13,6 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @Override
     public Product addProduct(Product product) {
