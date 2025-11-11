@@ -7,8 +7,14 @@ public class ItemCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
+
+    @ManyToOne
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
     private Integer quantity;
 
     public Long getId() {
@@ -33,5 +39,12 @@ public class ItemCart {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }
