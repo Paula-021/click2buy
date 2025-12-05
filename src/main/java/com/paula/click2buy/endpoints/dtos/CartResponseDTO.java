@@ -6,16 +6,20 @@ import com.paula.click2buy.domain.ItemCart;
 import java.util.List;
 
 public class CartResponseDTO {
-    private List<ItemCart> listItemCart;
+    private List<ItemCartResponseDTO> listItemCartDTO;
 
-    public List<ItemCart> getListItemCart() {
-        return listItemCart;
+    public List<ItemCartResponseDTO> getListItemCartDTO() {
+        return listItemCartDTO;
     }
 
-    public void setListItemCart(List<ItemCart> listItemCart) {
-        this.listItemCart = listItemCart;
+    public void setListItemCartDTO(List<ItemCartResponseDTO> listItemCartDTO) {
+        this.listItemCartDTO = listItemCartDTO;
     }
+
     public CartResponseDTO(Cart cart) {
-        this.listItemCart = cart.getListItemCart();
+        this.listItemCartDTO = cart.getListItemCart().stream()
+                .map(ItemCartResponseDTO::new)
+                .toList();
     }
+
 }
