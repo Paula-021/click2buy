@@ -20,6 +20,16 @@ public class Order {
     @ManyToOne
     private User user;
     private PaymentMethod paymentMethod;
+    @OneToOne
+    private Cart cart;
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
 
     public Long getId() {
         return id;
@@ -84,4 +94,6 @@ public class Order {
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
+
+    //primeira etapa: o usuário clica no botão "Finalizar Compra" no carrinho de compras. Neste momento, o sistema cria um novo pedido (Order) com os detalhes do carrinho, endereço de entrega, método de pagamento e calcula o preço total.
 }
