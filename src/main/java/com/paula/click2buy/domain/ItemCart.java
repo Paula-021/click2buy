@@ -17,6 +17,10 @@ public class ItemCart {
 
     private Integer quantity;
 
+    private boolean hasStock;
+
+    private boolean isSelected;
+
     public Long getId() {
         return id;
     }
@@ -46,5 +50,19 @@ public class ItemCart {
     }
     public void setCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public boolean isHasStock() {
+        return hasStock;
+    }
+    public void setHasStock(boolean hasStock) {
+        this.hasStock = hasStock;
+    }
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
