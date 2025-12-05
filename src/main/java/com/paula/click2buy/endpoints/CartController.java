@@ -12,17 +12,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 public class CartController {
 
     @Autowired
     private CartService cartService;
 
     @PostMapping
-    public ResponseEntity<?> addCart(@Valid @RequestBody CartRequestDTO cartRequestDTO) {
-        Cart cart = cartService.addCart(cartRequestDTO);
-        return ResponseEntity.status(201).body(cart);//201 CREATED
+    public ResponseEntity<?> addCart() { // a única função dele será abrir um carrinho (sem itens)
+        Cart cart = cartService.addCart();
+        return ResponseEntity.status(201).body(cart.getId());//201 CREATED
     }
+
+    @PutMapping("/{cartId}/items") // PUT /carts/1/items body: [{item1: productId, quantity}, {item2}, ...]
+    public ResponseEntity<?> addItemsToCart(@PathVariable Long cartId, @Valid @RequestBody CartRequestDTO cartRequestDTO) {
+
+        Cart cart = cartService.addItemsToCart(cartId, cartRequestDTO);
+
+        return ResponseEntity.status(200).body(new CartResponseDTO(cart));//200
+    }
+    @PutMapping("/{cartId}/items/{itemId}")
+    public ResponseEntity<?> removeOneItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
+        Cart cart = cartService.removeOneItemFromTheCart(cartId, itemId);
+
+        return ResponseEntity.status(200).body(new CartResponseDTO(cart));//200
+    }
+    @DeleteMapping("/{cartId}/items/{itemId}")
+    public ResponseEntity<?> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
+        Cart cart = cartService.removeItemFromCart(cartId, itemId);
+
+        return ResponseEntity.status(200).body(new CartResponseDTO(cart));//200
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCart(@Valid @RequestBody CartRequestDTO cartRequestDTO, @PathVariable Long id) {
         //Cart cart = cartRequestDTO.toEntity();
