@@ -2,7 +2,8 @@ package com.paula.click2buy.endpoints.dtos;
 
 import com.paula.click2buy.domain.Address;
 
-public class AddressOrderRequestDTO {
+public class AddressResponseDTO {
+
     private String zipcode;
     private String street;
     private String number;
@@ -10,6 +11,16 @@ public class AddressOrderRequestDTO {
     private String district;
     private String state;
     private String country;
+
+    public AddressResponseDTO(Address address) {
+        this.zipcode = address.getZipcode();
+        this.street = address.getStreet();
+        this.number = address.getNumber();
+        this.complement = address.getComplement();
+        this.district = address.getDistrict();
+        this.state = address.getState();
+        this.country = address.getCountry();
+    }
 
     public String getZipcode() {
         return zipcode;
@@ -65,18 +76,5 @@ public class AddressOrderRequestDTO {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public Address toEntity() {
-        Address address = new Address();
-        address.setZipcode(this.zipcode);
-        address.setStreet(this.street);
-        address.setNumber(this.number);
-        address.setComplement(this.complement);
-        address.setDistrict(this.district);
-        address.setState(this.state);
-        address.setCountry(this.country);
-
-        return address;
     }
 }

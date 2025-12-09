@@ -1,50 +1,31 @@
-package com.paula.click2buy.domain;
+package com.paula.click2buy.endpoints.dtos;
 
-import jakarta.persistence.*;
+import com.paula.click2buy.domain.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
-@Entity
-@Table(name = "orders")
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class OrderResponseDTO {
+
     private Double totalPrice;
-    @OneToOne
-    private Address deliveryAddress;
+    private AddressResponseDTO deliveryAddress;
     private LocalDate expectedDeliveryDate;
     private LocalDate deliveryDate;
     private LocalDate orderDate;
-    @ManyToOne
-    private User user;
+    private UserResponseDTO user;
     private PaymentMethod paymentMethod;
-    @OneToOne
-    private Cart cart;
+    private CartResponseDTO cart;
     private OrderStatus orderStatus;
 
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public OrderResponseDTO(Order order) {
+        this.totalPrice = order.getTotalPrice();
+        this.deliveryAddress = new AddressResponseDTO(order.getDeliveryAddress());
+        this.expectedDeliveryDate = order.getExpectedDeliveryDate();
+        this.deliveryDate = order.getDeliveryDate();
+        this.orderDate = order.getOrderDate();
+        this.user = new UserResponseDTO(order.getUser());
+        this.paymentMethod = order.getPaymentMethod();
+        this.cart = new CartResponseDTO(order.getCart());
+        this.orderStatus = order.getOrderStatus();
     }
 
     public Double getTotalPrice() {
@@ -55,11 +36,11 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public Address getDeliveryAddress() {
+    public AddressResponseDTO getDeliveryAddress() {
         return deliveryAddress;
     }
 
-    public void setDeliveryAddress(Address deliveryAddress) {
+    public void setDeliveryAddress(AddressResponseDTO deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
 
@@ -87,11 +68,11 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public User getUser() {
+    public UserResponseDTO getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserResponseDTO user) {
         this.user = user;
     }
 
@@ -103,5 +84,19 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    //primeira etapa: o usuário clica no botão "Finalizar Compra" no carrinho de compras. Neste momento, o sistema cria um novo pedido (Order) com os detalhes do carrinho, endereço de entrega, método de pagamento e calcula o preço total.
+    public CartResponseDTO getCart() {
+        return cart;
+    }
+
+    public void setCart(CartResponseDTO cart) {
+        this.cart = cart;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }
