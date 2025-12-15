@@ -11,18 +11,34 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double totalPrice;
+    private Double totalPrice;//
     @OneToOne
     private Address deliveryAddress;
-    private LocalDate expectedDeliveryDate;
+    private LocalDate expectedDeliveryDate;//
     private LocalDate deliveryDate;
-    private LocalDate orderDate;
+    private LocalDate orderDate;//
     @ManyToOne
     private User user;
     private PaymentMethod paymentMethod;
     @OneToOne
     private Cart cart;
-    private OrderStatus orderStatus;
+    private OrderStatus orderStatus;//
+    private String trackingNumber;//
+    private boolean paid;
+
+    public boolean isPaid() {
+        return paid;
+    }
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
+    }
 
     public OrderStatus getOrderStatus() {
         return orderStatus;
