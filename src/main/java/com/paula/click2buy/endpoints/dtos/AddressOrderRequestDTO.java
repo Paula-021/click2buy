@@ -1,14 +1,25 @@
 package com.paula.click2buy.endpoints.dtos;
 
 import com.paula.click2buy.domain.Address;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class AddressOrderRequestDTO {
+
+    @NotBlank (message = "Zipcode is required")
+    @Pattern(regexp = "\\d{8}", message = "zipcode must contain exactly 8 digits")
     private String zipcode;
+    @NotBlank(message = "Street is required")
     private String street;
+    @NotBlank(message = "Number is required")
     private String number;
     private String complement;
+    @NotBlank(message = "District is required")
     private String district;
+    @NotBlank(message = "State is required")
     private String state;
+    @NotBlank(message = "Country is required")
     private String country;
 
     public String getZipcode() {
