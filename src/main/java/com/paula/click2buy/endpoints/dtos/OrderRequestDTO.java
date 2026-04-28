@@ -51,7 +51,6 @@ public class OrderRequestDTO {
 
     public Order toEntity(Cart cart, User user) {
         Order order = new Order();
-
         order.setCart(cart);
         order.setUser(user);
         order.setPaymentMethod(this.paymentMethod);
