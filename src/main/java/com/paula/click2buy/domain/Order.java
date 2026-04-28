@@ -11,10 +11,11 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double totalPrice;//
+
     @OneToOne
     private Address deliveryAddress;
     private LocalDate expectedDeliveryDate;//
+    //adicionar campo de preço do frete e preço total dos PRODUTOS sendo que o totalPrice seria a soma dos dois
     private LocalDate deliveryDate;
     private LocalDate orderDate;//
     @ManyToOne
@@ -25,6 +26,8 @@ public class Order {
     private OrderStatus orderStatus;//
     private String trackingNumber;//
     private boolean paid;
+
+    //private Seller seller;
 
     public boolean isPaid() {
         return paid;
@@ -63,13 +66,13 @@ public class Order {
         this.id = id;
     }
 
-    public Double getTotalPrice() {
-        return totalPrice;
-    }
+   // public Double getTotalPrice() {
+  //      return totalPrice;
+   // }
 
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+   // public void setTotalPrice(Double totalPrice) {
+   //     this.totalPrice = totalPrice;
+   // }
 
     public Address getDeliveryAddress() {
         return deliveryAddress;
