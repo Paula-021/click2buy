@@ -12,4 +12,12 @@ public interface OrderService {
     void addOrder(Order order);
 
     List<Order> getAllOrders();
+
+    void markOrderAsPaid(Long id);
+
+    void updateOrderStatus(Long id);
+
+    void updateOrderAddress(Long id, Long idAddress);
+
+    void updateOrderStatusCancel(Long id);
 }
