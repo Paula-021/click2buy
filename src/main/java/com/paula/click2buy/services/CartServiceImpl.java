@@ -1,14 +1,20 @@
 package com.paula.click2buy.services;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.paula.click2buy.domain.Cart;
 import com.paula.click2buy.domain.ItemCart;
 import com.paula.click2buy.domain.Product;
 import com.paula.click2buy.endpoints.dtos.CartRequestDTO;
+import com.paula.click2buy.endpoints.dtos.CartShippingCalculateRequestDTO;
 import com.paula.click2buy.endpoints.dtos.ItemCartRequestDTO;
 import com.paula.click2buy.exceptions.CartNotFoundException;
 import com.paula.click2buy.exceptions.StockQuantityNotFoundException;
 import com.paula.click2buy.repositories.CartRepository;
+import com.paula.click2buy.shipment.dtos.MelhorEnvioProductDTO;
+import com.paula.click2buy.shipment.dtos.ShipmentRequestDTO;
+import com.paula.click2buy.shipment.dtos.ShipmentResponseDTO;
+import com.paula.click2buy.shipment.services.MelhorEnvioShipmentCalculateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +29,8 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private MelhorEnvioShipmentCalculateService melhorEnvioShipmentCalculateService;
 
     @Override
     public Cart addCart() {
@@ -153,6 +161,57 @@ public class CartServiceImpl implements CartService {
         Cart cart = cartRepository.findById(cartId).orElseThrow(()-> new CartNotFoundException());
         cart.getListItemCart().removeIf(item -> item.getId().equals(itemId));
         return cartRepository.save(cart);
+    }
+
+    @Override
+    public List<ShipmentResponseDTO> calculateShipping(Cart cart, CartShippingCalculateRequestDTO cartShippingCalculateRequestDTO) throws JsonProcessingException {
+
+        //do cart o que nos interessa é os produtos
+        List<MelhorEnvioProductDTO> melhorEnvioProductDTOList = new ArrayList<>();
+
+        List<ItemCart> listItemCart = cart.getListItemCart();
+        listItemCart.forEach(itemCart -> {
+            Product product = itemCart.getProduct();
+            int quantity = itemCart.getQuantity();
+
+            MelhorEnvioProductDTO melhorEnvioProductDTO = new MelhorEnvioProductDTO();
+            melhorEnvioProductDTO.setProduct(product);
+            melhorEnvioProductDTO.setQuantity(quantity);
+
+            melhorEnvioProductDTOList.add(melhorEnvioProductDTO);
+
+        });
+
+        String sender = cartShippingCalculateRequestDTO.getZipCodeSender();
+        String recipient = cartShippingCalculateRequestDTO.getZipCodeRecipient();
+
+        ShipmentRequestDTO shipmentRequestDTO = new ShipmentRequestDTO();
+        shipmentRequestDTO.setSender(sender);
+        shipmentRequestDTO.setRecipient(recipient);
+        shipmentRequestDTO.setProducts(melhorEnvioProductDTOList);
+
+         List<ShipmentResponseDTO> shipmentResponseDTOList = melhorEnvioShipmentCalculateService.calculateShipment(shipmentRequestDTO);
+
+         return shipmentResponseDTOList;
+
+        //cartShippingCalculateRequestDTO -> cep de origem e cep de destino
+
+
+    }
+
+    @Override
+    public Double calculateTotalPrice(Cart cart) {
+        Double totalPrice = cart.getListItemCart().stream()
+                .mapToDouble(itemCart -> itemCart.getProduct().getPrice() * itemCart.getQuantity())
+                .sum();
+
+        if (cart.getShippingSelected() != null) {
+            totalPrice += cart.getShippingSelected().getPrice();
+        }
+
+
+
+        return totalPrice;
     }
 
 
