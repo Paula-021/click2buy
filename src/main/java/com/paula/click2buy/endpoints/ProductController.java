@@ -4,7 +4,6 @@ package com.paula.click2buy.endpoints;
 import com.paula.click2buy.domain.Product;
 import com.paula.click2buy.endpoints.dtos.ProductRequestDTO;
 import com.paula.click2buy.endpoints.dtos.ProductResponseDTO;
-import com.paula.click2buy.endpoints.dtos.ProductUpdateRequestDTO;
 import com.paula.click2buy.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,10 @@ public class ProductController {
 
     }
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductUpdateRequestDTO productUpdateRequestDTO, @PathVariable Long id) {
-        productService.updateProduct(id, productUpdateRequestDTO);
+    public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductRequestDTO productRequestDTO, @PathVariable Long id) {
+        Product product = productRequestDTO.toEntity();
+        product.setId(id);
+        productService.updateProduct(product);
         return ResponseEntity.ok().body("Product updated successfully!");//200 OK
     }
     @DeleteMapping("/{id}")
