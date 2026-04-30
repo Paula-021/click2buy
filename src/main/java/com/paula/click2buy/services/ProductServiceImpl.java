@@ -1,10 +1,10 @@
 package com.paula.click2buy.services;
 
 import com.paula.click2buy.domain.Product;
-import com.paula.click2buy.endpoints.dtos.ProductUpdateRequestDTO;
+import com.paula.click2buy.endpoints.dtos.ProductRequestDTO;
 import com.paula.click2buy.exceptions.ProductNotFoundException;
 import com.paula.click2buy.repositories.ProductRepository;
-import com.paula.click2buy.repositories.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +15,6 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @Override
     public Product addProduct(Product product) {
@@ -24,23 +22,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void updateProduct(Long id, ProductUpdateRequestDTO productUpdateRequestDTO) {
-
-        Product product = getProductById(id);
-
-        if(!productUpdateRequestDTO.getName().isEmpty()){
-            product.setName(productUpdateRequestDTO.getName());
-        }
-        if(!productUpdateRequestDTO.getDescription().isEmpty()){
-            product.setDescription(productUpdateRequestDTO.getDescription());
-        }
-        if(!(productUpdateRequestDTO.getPrice() <= 0.0)){
-            product.setPrice(productUpdateRequestDTO.getPrice());
-        }
-        if(!(productUpdateRequestDTO.getStockQuantity() < 0)){
-            product.setStockQuantity(productUpdateRequestDTO.getStockQuantity());
-        }
-
+    public void updateProduct( Product product) {
         productRepository.save(product);
 
     }
