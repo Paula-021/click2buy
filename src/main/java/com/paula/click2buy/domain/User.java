@@ -1,9 +1,8 @@
 package com.paula.click2buy.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class User {
@@ -15,6 +14,27 @@ public class User {
     private String telephone;
     private String password;
     private String cpf;
+
+    @ManyToMany
+    private List<Address> addresses;
+
+    private Role role;
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> address) {
+        this.addresses = address;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public Long getId() {
         return id;
