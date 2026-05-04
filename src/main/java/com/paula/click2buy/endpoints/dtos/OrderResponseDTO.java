@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class OrderResponseDTO {
 
-    private Double totalPrice;
+
     private AddressResponseDTO deliveryAddress;
     private LocalDate expectedDeliveryDate;
     private LocalDate deliveryDate;
@@ -17,7 +17,7 @@ public class OrderResponseDTO {
     private OrderStatus orderStatus;
 
     public OrderResponseDTO(Order order) {
-        this.totalPrice = order.getTotalPrice();
+       // this.totalPrice = order.getTotalPrice();
         this.deliveryAddress = new AddressResponseDTO(order.getDeliveryAddress());
         this.expectedDeliveryDate = order.getExpectedDeliveryDate();
         this.deliveryDate = order.getDeliveryDate();
@@ -28,13 +28,6 @@ public class OrderResponseDTO {
         this.orderStatus = order.getOrderStatus();
     }
 
-    public Double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
 
     public AddressResponseDTO getDeliveryAddress() {
         return deliveryAddress;

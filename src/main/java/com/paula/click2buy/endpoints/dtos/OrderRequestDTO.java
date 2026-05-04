@@ -4,12 +4,16 @@ import com.paula.click2buy.domain.Cart;
 import com.paula.click2buy.domain.Order;
 import com.paula.click2buy.domain.PaymentMethod;
 import com.paula.click2buy.domain.User;
+import jakarta.validation.constraints.NotNull;
 
 public class OrderRequestDTO {
-
+    @NotNull(message = "idCart cannot be null")
     private Long idCart;
+    @NotNull(message = "deliveryAddress cannot be null")
     private AddressOrderRequestDTO deliveryAddress;
+    @NotNull(message = "idUser cannot be null")
     private Long idUser;
+    @NotNull(message = "paymentMethod cannot be null")
     private PaymentMethod paymentMethod;
 
 
@@ -47,7 +51,6 @@ public class OrderRequestDTO {
 
     public Order toEntity(Cart cart, User user) {
         Order order = new Order();
-
         order.setCart(cart);
         order.setUser(user);
         order.setPaymentMethod(this.paymentMethod);
