@@ -19,6 +19,17 @@ public class ProductRequestDTO {
     @Min(value = 0, message = "Stock quantity cannot be negative")
     private Integer stockQuantity;
 
+    @NotNull(message = "Weight is required")
+    private Double weight;
+    @NotNull(message = "Width is required")
+    private Double width;
+    @NotNull(message = "Height is required")
+    private Double height;
+    @NotNull(message = "Length is required")
+    private Double length;
+    @NotNull(message = "Insurance value is required")
+    private Double insuranceValue;
+
     public String getName() {
         return name;
     }
@@ -51,12 +62,57 @@ public class ProductRequestDTO {
         this.stockQuantity = stockQuantity;
     }
 
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public Double getWidth() {
+        return width;
+    }
+
+    public void setWidth(Double width) {
+        this.width = width;
+    }
+
+    public Double getHeight() {
+        return height;
+    }
+
+    public void setHeight(Double height) {
+        this.height = height;
+    }
+
+    public Double getLength() {
+        return length;
+    }
+
+    public void setLength(Double length) {
+        this.length = length;
+    }
+
+    public Double getInsuranceValue() {
+        return insuranceValue;
+    }
+
+    public void setInsuranceValue(Double insuranceValue) {
+        this.insuranceValue = insuranceValue;
+    }
+
     public Product toEntity() {
         Product product = new Product();
         product.setName(this.name);
         product.setPrice(this.price);
         product.setDescription(this.description);
         product.setStockQuantity(this.stockQuantity);
+        product.setWeight(this.weight);
+        product.setWidth(this.width);
+        product.setHeight(this.height);
+        product.setLength(this.length);
+        product.setInsuranceValue(this.insuranceValue);
         return product;
     }
 }

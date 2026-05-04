@@ -1,7 +1,8 @@
 package com.paula.click2buy.services;
 
 import com.paula.click2buy.domain.Product;
-import com.paula.click2buy.endpoints.dtos.ProductUpdateRequestDTO;
+import com.paula.click2buy.endpoints.dtos.ProductRequestDTO;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface ProductService {
     Product addProduct(Product product);
 
-    void updateProduct(Long id, ProductUpdateRequestDTO productUpdateRequestDTO);
+    void updateProduct(Product product);
 
     void deleteProduct(Long id);
 
