@@ -7,9 +7,19 @@ public class ItemCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
+
+    @ManyToOne
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
     private Integer quantity;
+
+    private boolean hasStock;
+
+    private boolean isSelected;
 
     public Long getId() {
         return id;
@@ -33,5 +43,26 @@ public class ItemCart {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public boolean isHasStock() {
+        return hasStock;
+    }
+    public void setHasStock(boolean hasStock) {
+        this.hasStock = hasStock;
+    }
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

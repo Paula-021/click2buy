@@ -4,7 +4,6 @@ import com.paula.click2buy.domain.Product;
 import com.paula.click2buy.endpoints.dtos.ProductRequestDTO;
 import com.paula.click2buy.exceptions.ProductNotFoundException;
 import com.paula.click2buy.repositories.ProductRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

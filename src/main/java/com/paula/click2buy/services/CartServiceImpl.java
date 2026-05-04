@@ -1,0 +1,159 @@
+package com.paula.click2buy.services;
+
+
+import com.paula.click2buy.domain.Cart;
+import com.paula.click2buy.domain.ItemCart;
+import com.paula.click2buy.domain.Product;
+import com.paula.click2buy.endpoints.dtos.CartRequestDTO;
+import com.paula.click2buy.endpoints.dtos.ItemCartRequestDTO;
+import com.paula.click2buy.exceptions.CartNotFoundException;
+import com.paula.click2buy.exceptions.StockQuantityNotFoundException;
+import com.paula.click2buy.repositories.CartRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class CartServiceImpl implements CartService {
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    @Override
+    public Cart addCart() {
+//        List<ItemCart> listItemCart = cartRequestDTO.getListItemCartDTO().stream()
+//                .map(itemCartDTO -> {
+//                            Product product = productService.getProductById(itemCartDTO.getProductId());
+//
+//                            return itemCartDTO.toEntity(product);
+//                        }
+//                )
+//                .toList();
+
+//        cart.setListItemCart(listItemCart);
+
+        Cart cart = new Cart(); //null
+        List<ItemCart> itemCarts = new ArrayList<>();
+        cart.setListItemCart(itemCarts);
+        return cartRepository.save(cart);
+    }
+
+    @Override
+    public void updateCart(Cart cart) {
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public void deleteCart(Long id) {
+        cartRepository.deleteById(id);
+    }
+
+    @Override
+    public Cart getCartById(Long id) {
+        return cartRepository.findById(id).orElseThrow(()-> new CartNotFoundException());
+    }
+
+    @Override
+    public List<Cart> getAllCarts() {
+        List<Cart> carts = cartRepository.findAll();
+        return carts;
+    }
+
+    @Override
+    public Cart addItemsToCart(Long cartId, CartRequestDTO cartRequestDTO) {
+
+        //convertar ItemCartRequestDTO para ItemCart
+        List<ItemCart> listItemCart = cartRequestDTO.getListItemCartDTO().stream()
+                .map(itemCartDTO -> {
+                            Product product = productService.getProductById(itemCartDTO.getProductId());
+
+                            return itemCartDTO.toEntity(product);
+                        }
+                )
+                .toList();
+
+        //pega o carrinho
+        Cart cart = getCartById(cartId);
+
+
+        // GARANTE que a lista existe
+        if (cart.getListItemCart() == null) {
+            cart.setListItemCart(new ArrayList<>());
+        }
+
+        // Adiciona corretamente item a item
+        for (ItemCart item : listItemCart) {
+
+            // validar, antes de adicionar no carrinho, se a quantidade de estoque é suficiente
+
+            int stockQuantity = item.getProduct().getStockQuantity();
+
+            if (item.getQuantity() > stockQuantity) {
+                throw new StockQuantityNotFoundException("Quantidade solicitada para o produto " +
+                        item.getProduct().getName() + " excede a quantidade em estoque.");
+            }
+
+
+            // a cada requisição de busca por um carrinho, verificar e atualizar o atributo hasStock de cada ItemCart
+
+
+
+            //se já existe o produto no carrinho, só atualiza a quantidade
+            boolean found = false;
+            for (ItemCart existingItem : cart.getListItemCart()) {
+                if (existingItem.getProduct().getId().equals(item.getProduct().getId())) {
+                    if(existingItem.getQuantity() + item.getQuantity() > stockQuantity){
+                        throw new StockQuantityNotFoundException("Quantidade solicitada para o produto " +
+                                item.getProduct().getName() + " excede a quantidade em estoque.");
+                    }
+
+                    existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+//                    int quantity = existingItem.getQuantity();
+//                    Product product = existingItem.getProduct();
+//                    product.setStockQuantity(product.getStockQuantity() - quantity);
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                item.setCart(cart); // MUITO IMPORTANTE
+                cart.getListItemCart().add(item);
+            }
+        }
+        return cartRepository.save(cart);
+    }
+
+    @Override
+    public Cart removeOneItemFromTheCart(Long cartId, Long itemId) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(()-> new CartNotFoundException());
+        List<ItemCart> itemCartList = cart.getListItemCart();
+        for (ItemCart itemCart : itemCartList) {
+            if(itemCart.getId().equals(itemId)){
+
+                itemCart.setQuantity(itemCart.getQuantity() - 1);
+                if(itemCart.getQuantity() <= 0){
+                    itemCartList.remove(itemCart);
+                }
+
+                break;
+            }
+        }
+        cart.setListItemCart(itemCartList);
+        return cartRepository.save(cart);
+    }
+
+    @Override
+    public Cart removeItemFromCart(Long cartId, Long itemId) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(()-> new CartNotFoundException());
+        cart.getListItemCart().removeIf(item -> item.getId().equals(itemId));
+        return cartRepository.save(cart);
+    }
+
+
+}
