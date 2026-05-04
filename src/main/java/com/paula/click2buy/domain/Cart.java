@@ -14,6 +14,27 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemCart> listItemCart;
 
+    private Double totalPrice;
+
+    @OneToOne
+    private ShippingOption shippingSelected;
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public ShippingOption getShippingSelected() {
+        return shippingSelected;
+    }
+
+    public void setShippingSelected(ShippingOption shippingSelected) {
+        this.shippingSelected = shippingSelected;
+    }
+
     public Cart(){
         listItemCart = new ArrayList<>();
     }

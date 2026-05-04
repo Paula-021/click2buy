@@ -15,11 +15,15 @@ public class CartRequestDTO {
     //@NotEmpty(message = "The cart must have at least one item")
     private List<ItemCartRequestDTO> listItemCartDTO;
 
+
+
     public List<ItemCartRequestDTO> getListItemCartDTO() {
+
         return listItemCartDTO;
     }
 
     public void setListItemCartDTO(List<ItemCartRequestDTO> listItemCartDTO) {
+
         this.listItemCartDTO = listItemCartDTO;
     }
 
