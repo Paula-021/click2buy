@@ -1,8 +1,10 @@
 package com.paula.click2buy.endpoints;
 
+import com.paula.click2buy.domain.Address;
 import com.paula.click2buy.domain.User;
 import com.paula.click2buy.endpoints.dtos.UserRequestDTO;
 import com.paula.click2buy.endpoints.dtos.UserResponseDTO;
+import com.paula.click2buy.services.AddressService;
 import com.paula.click2buy.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AddressService addressService;
+
     @PostMapping
     public ResponseEntity<?> addUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
 
         User user = userService.addUser(userRequestDTO.toEntity());
-        return ResponseEntity.status(201).body(user);//201 CREATED
+
+        return ResponseEntity.status(201).body(new UserResponseDTO(user));//201 CREATED
     }
 
     @PutMapping("/{id}")
@@ -53,6 +59,16 @@ public class UserController {
         List<UserResponseDTO> userResponseDTOs = users.stream().map(UserResponseDTO::new).toList();
 
         return ResponseEntity.ok().body(userResponseDTOs);//200 OK
+    }
+
+    //criar um endpoint para o usuário adicionar endereços
+    @PutMapping("/{id}/addresses/{idAddress}")
+    public ResponseEntity<?> addAddressToUser(@PathVariable Long id, @PathVariable Long idAddress) {
+        User user = userService.getUserById(id);
+        Address address = addressService.getAddressById(idAddress);
+        user.getAddresses().add(address);
+        userService.updateUser(user);
+        return ResponseEntity.ok().body("Addresses added to user successfully!");//200 OK
     }
 
 

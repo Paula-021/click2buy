@@ -1,5 +1,6 @@
 package com.paula.click2buy.endpoints.dtos;
 
+import com.paula.click2buy.domain.Role;
 import com.paula.click2buy.domain.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -32,6 +33,7 @@ public class UserRequestDTO {
 //            message = "CPF must contain 11 numeric digits"
 //    )
     private String cpf;
+
 
     public String getName() {
         return name;
@@ -80,6 +82,7 @@ public class UserRequestDTO {
         user.setTelephone(this.telephone);
         user.setPassword(this.password);
         user.setCpf(this.cpf);
+        user.setRole(Role.USER);
 
         return user;
     }
