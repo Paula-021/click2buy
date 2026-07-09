@@ -60,8 +60,10 @@ public class Product {
         this.description = description;
     }
 
-    public Integer getStockQuantity() {
-        return stockQuantity;
+    public Integer getStockQuantity()
+    {
+        if(stockQuantity != null )return stockQuantity;
+        return 0;
     }
 
     public void setStockQuantity(Integer stockQuantity) {
