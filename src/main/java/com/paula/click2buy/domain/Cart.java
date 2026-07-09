@@ -35,6 +35,28 @@ public class Cart {
         this.shippingSelected = shippingSelected;
     }
 
+    private Double totalPriceBrl;
+
+    @OneToOne
+    private ShippingOption shippingSelected;
+
+
+    public Double getTotalPriceBrl() {
+        return totalPriceBrl;
+    }
+
+    public void setTotalPriceBrl(Double totalPrice) {
+        this.totalPriceBrl = totalPrice;
+    }
+
+    public ShippingOption getShippingSelected() {
+        return shippingSelected;
+    }
+
+    public void setShippingSelected(ShippingOption shippingSelected) {
+        this.shippingSelected = shippingSelected;
+    }
+
     public Cart(){
         listItemCart = new ArrayList<>();
     }
@@ -54,4 +76,6 @@ public class Cart {
     public void setListItemCart(List<ItemCart> listItemCart) {
         this.listItemCart = listItemCart;
     }
+
+
 }

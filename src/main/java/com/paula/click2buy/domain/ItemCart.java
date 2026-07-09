@@ -18,6 +18,12 @@ public class ItemCart {
     private Integer quantity;
 
     private boolean hasStock;
+    // 1. usuario foi adicionar um item no carrinho: verificar se tem estoque antes de adicionar
+    // 2. usuario foi visualizar o carrinho: verificar se tem estoque nos itens adicionados (se não tiver, atualizar o atributo hasStock para false e informar o usuário que tem itens sem estoque)
+    // 3. usuario foi atualizar a quantidade de um item no carrinho: verificar se tem estoque antes de atualizar a quantidade
+    // 4. usuario foi finalizar a compra: verificar se tem estoque antes de finalizar a compra (se não tiver, informar o usuário que tem itens sem estoque e não finalizar a compra)
+
+    //testar as 4 possibilidades acima para garantir que o sistema está verificando o estoque corretamente e informando o usuário quando necessário.
 
     private boolean isSelected;
 
