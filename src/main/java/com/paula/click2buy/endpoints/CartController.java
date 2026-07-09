@@ -41,12 +41,14 @@ public class CartController {
         return ResponseEntity.status(200).body(new CartResponseDTO(cart));//200
     }
 
-    @PutMapping("/{cartId}/items/{itemId}")
-    public ResponseEntity<?> removeOneItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
-        Cart cart = cartService.removeOneItemFromTheCart(cartId, itemId);
+    @PatchMapping("/{cartId}/items/{itemId}") // /carts/1/items/1?action=add
+    public ResponseEntity<?> updateQuantityOneItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId, @RequestParam String action) {
+
+        Cart cart = cartService.updateQuantityOneItemFromCart(cartId, itemId, action);
 
         return ResponseEntity.status(200).body(new CartResponseDTO(cart));//200
     }
+
 
     @DeleteMapping("/{cartId}/items/{itemId}")
     public ResponseEntity<?> removeItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId) {
@@ -55,13 +57,6 @@ public class CartController {
         return ResponseEntity.status(200).body(new CartResponseDTO(cart));//200
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateCart(@Valid @RequestBody CartRequestDTO cartRequestDTO, @PathVariable Long id) {
-        //Cart cart = cartRequestDTO.toEntity();
-        //cart.setId(id);
-        //cartService.updateCart(cart);
-        return ResponseEntity.ok().body("Cart updated successfully!");//200 OK
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCart(@PathVariable Long id) {
@@ -93,9 +88,14 @@ public class CartController {
 
     @PutMapping("/{cartId}/shipping/select")
     public ResponseEntity<?> selectShippingOption(@PathVariable Long cartId, @RequestBody ShippingOptionDTO shippingOptionDTO) throws JsonProcessingException {
+
         Cart cart = cartService.getCartById(cartId);
         ShippingOption shippingOption = shippingOptionDTO.toEntity();
-        cart.setShippingSelected(shippingOption);
+
+        ShippingOption shippingOptionSaved = cartService.addShippingOption(shippingOption); //salva a opção de frete selecionada no banco de dados, para manter a consistência da relação entre as entidades Cart e ShippingOption
+
+        cart.setShippingSelected(shippingOptionSaved);
+
 
         cartService.updateCart(cart);
         return ResponseEntity.ok().body("Cart updated successfully!");//200 OK
@@ -106,8 +106,8 @@ public class CartController {
         Cart cart = cartService.getCartById(cartId);
         Double totalPrice = cartService.calculateTotalPrice(cart);
 
-        if(cart.getTotalPrice() == null || !cart.getTotalPrice().equals(totalPrice)){
-            cart.setTotalPrice(totalPrice);
+        if(cart.getTotalPriceBrl() == null || !cart.getTotalPriceBrl().equals(totalPrice)){
+            cart.setTotalPriceBrl(totalPrice);
             cartService.updateCart(cart);
 
         }

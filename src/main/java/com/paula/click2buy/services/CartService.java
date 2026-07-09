@@ -2,6 +2,7 @@ package com.paula.click2buy.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.paula.click2buy.domain.Cart;
+import com.paula.click2buy.domain.ShippingOption;
 import com.paula.click2buy.endpoints.dtos.CartRequestDTO;
 import com.paula.click2buy.endpoints.dtos.CartShippingCalculateRequestDTO;
 import com.paula.click2buy.shipment.dtos.ShipmentResponseDTO;
@@ -25,11 +26,17 @@ public interface CartService {
 
     Cart addItemsToCart(Long cartId, @Valid CartRequestDTO cartRequestDTO);
 
-    Cart removeOneItemFromTheCart(Long cartId, Long itemId);
+    Cart removeOneUnityItemFromCart(Long cartId, Long itemId);
+
+    Cart addOneUnityItemFromCart(Long cartId, Long itemId);
 
     Cart removeItemFromCart(Long cartId, Long itemId);
 
     List<ShipmentResponseDTO> calculateShipping(Cart cart, CartShippingCalculateRequestDTO cartShippingCalculateRequestDTO) throws JsonProcessingException;
 
     Double calculateTotalPrice(Cart cart);
+
+    ShippingOption addShippingOption(ShippingOption shippingOption);
+
+    Cart updateQuantityOneItemFromCart(Long cartId, Long itemId, String action);
 }
