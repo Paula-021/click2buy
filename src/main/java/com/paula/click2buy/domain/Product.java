@@ -15,6 +15,18 @@ public class Product {
     private Double price;
     private String description;
     private Integer stockQuantity;
+    //colcoar categoria
+
+    private Double weight;
+    private Double width;
+    private Double height;
+    private Double length;
+    private Double insuranceValue;
+
+    //private Seller seller;
+
+
+    //tamanho do produto (peso, dimensao do pacote: largura, altura, comprimento)
 
     public Long getId() {
         return id;
@@ -48,11 +60,53 @@ public class Product {
         this.description = description;
     }
 
-    public Integer getStockQuantity() {
-        return stockQuantity;
+    public Integer getStockQuantity()
+    {
+        if(stockQuantity != null )return stockQuantity;
+        return 0;
     }
 
     public void setStockQuantity(Integer stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public Double getWidth() {
+        return width;
+    }
+
+    public void setWidth(Double width) {
+        this.width = width;
+    }
+
+    public Double getHeight() {
+        return height;
+    }
+
+    public void setHeight(Double height) {
+        this.height = height;
+    }
+
+    public Double getLength() {
+        return length;
+    }
+
+    public void setLength(Double length) {
+        this.length = length;
+    }
+
+    public Double getInsuranceValue() {
+        return insuranceValue;
+    }
+
+    public void setInsuranceValue(Double insuranceValue) {
+        this.insuranceValue = insuranceValue;
     }
 }

@@ -6,10 +6,12 @@ import com.paula.click2buy.domain.Product;
 public class ItemCartResponseDTO {
     private Product product;
     private Integer quantity;
+    private boolean hasStock;
 
     public ItemCartResponseDTO(ItemCart itemCart) {
         this.product = itemCart.getProduct();
         this.quantity = itemCart.getQuantity();
+        this.hasStock = itemCart.getProduct().getStockQuantity() >= itemCart.getQuantity();
     }
 
     public Product getProduct() {
@@ -26,5 +28,12 @@ public class ItemCartResponseDTO {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public boolean isHasStock() {
+        return hasStock;
+    }
+    public void setHasStock(boolean hasStock) {
+        this.hasStock = hasStock;
     }
 }

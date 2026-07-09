@@ -7,6 +7,7 @@ public class UserResponseDTO {
     private String email;
     private String telephone;
 
+
     public UserResponseDTO(User user) {
         this.name = user.getName();
         this.email = user.getEmail();

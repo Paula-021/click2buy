@@ -1,6 +1,8 @@
 package com.paula.click2buy.services;
 
 import com.paula.click2buy.domain.Product;
+import com.paula.click2buy.endpoints.dtos.ProductRequestDTO;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

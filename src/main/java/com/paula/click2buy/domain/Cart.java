@@ -2,6 +2,7 @@ package com.paula.click2buy.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -10,8 +11,33 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemCart> listItemCart;
+
+    private Double totalPrice;
+
+    @OneToOne
+    private ShippingOption shippingSelected;
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public ShippingOption getShippingSelected() {
+        return shippingSelected;
+    }
+
+    public void setShippingSelected(ShippingOption shippingSelected) {
+        this.shippingSelected = shippingSelected;
+    }
+
+    public Cart(){
+        listItemCart = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;

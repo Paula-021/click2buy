@@ -1,6 +1,7 @@
 package com.paula.click2buy.services;
 
 import com.paula.click2buy.domain.Product;
+import com.paula.click2buy.endpoints.dtos.ProductRequestDTO;
 import com.paula.click2buy.exceptions.ProductNotFoundException;
 import com.paula.click2buy.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void updateProduct(Product product) {
+    public void updateProduct( Product product) {
         productRepository.save(product);
 
     }
