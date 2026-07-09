@@ -5,12 +5,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.paula.click2buy.domain.Cart;
 import com.paula.click2buy.domain.ItemCart;
 import com.paula.click2buy.domain.Product;
+import com.paula.click2buy.domain.ShippingOption;
 import com.paula.click2buy.endpoints.dtos.CartRequestDTO;
 import com.paula.click2buy.endpoints.dtos.CartShippingCalculateRequestDTO;
-import com.paula.click2buy.endpoints.dtos.ItemCartRequestDTO;
 import com.paula.click2buy.exceptions.CartNotFoundException;
 import com.paula.click2buy.exceptions.StockQuantityNotFoundException;
 import com.paula.click2buy.repositories.CartRepository;
+import com.paula.click2buy.repositories.ShippingOptionRepository;
 import com.paula.click2buy.shipment.dtos.MelhorEnvioProductDTO;
 import com.paula.click2buy.shipment.dtos.ShipmentRequestDTO;
 import com.paula.click2buy.shipment.dtos.ShipmentResponseDTO;
@@ -31,6 +32,8 @@ public class CartServiceImpl implements CartService {
     private ProductService productService;
     @Autowired
     private MelhorEnvioShipmentCalculateService melhorEnvioShipmentCalculateService;
+    @Autowired
+    private ShippingOptionRepository shippingOptionRepository;
 
     @Override
     public Cart addCart() {
@@ -63,7 +66,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart getCartById(Long id) {
-        return cartRepository.findById(id).orElseThrow(()-> new CartNotFoundException());
+        //pegar o carrinho
+        Cart cart = cartRepository.findById(id).orElseThrow(()-> new CartNotFoundException());
+        //verificar se tem estoque nos itens, se nao tiver, atualizar o atributo hasStock para false
+        cart.getListItemCart().forEach(itemCart -> {
+            int stockQuantity = itemCart.getProduct().getStockQuantity();
+            if (itemCart.getQuantity() > stockQuantity) {
+                itemCart.setHasStock(false);
+            } else {
+                itemCart.setHasStock(true);
+            }
+        });
+
+        Double totalPrice = calculateTotalPrice(cart);
+        cart.setTotalPriceBrl(totalPrice);
+        return cartRepository.save(cart);
     }
 
     @Override
@@ -102,8 +119,8 @@ public class CartServiceImpl implements CartService {
             int stockQuantity = item.getProduct().getStockQuantity();
 
             if (item.getQuantity() > stockQuantity) {
-                throw new StockQuantityNotFoundException("Quantidade solicitada para o produto " +
-                        item.getProduct().getName() + " excede a quantidade em estoque.");
+                throw new StockQuantityNotFoundException(" Quantity requested for product " +
+                        item.getProduct().getName() + " exceeds the stock quantity.");
             }
 
 
@@ -116,8 +133,8 @@ public class CartServiceImpl implements CartService {
             for (ItemCart existingItem : cart.getListItemCart()) {
                 if (existingItem.getProduct().getId().equals(item.getProduct().getId())) {
                     if(existingItem.getQuantity() + item.getQuantity() > stockQuantity){
-                        throw new StockQuantityNotFoundException("Quantidade solicitada para o produto " +
-                                item.getProduct().getName() + " excede a quantidade em estoque.");
+                        throw new StockQuantityNotFoundException("Quantity requested for product " +
+                                existingItem.getProduct().getName() + " exceeds the stock quantity.");
                     }
 
                     existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
@@ -136,9 +153,19 @@ public class CartServiceImpl implements CartService {
         }
         return cartRepository.save(cart);
     }
+    public Cart updateQuantityOneItemFromCart(Long cartId, Long itemId, String action){
+        if(action.equals("add")){
+            Cart cart = addOneUnityItemFromCart(cartId, itemId);
+            return cart;//200
+        }else if(!action.equals("remove")){
+            Cart cart = removeOneUnityItemFromCart(cartId, itemId);
+            return cart;
+        }
+        return null;
+    }
 
     @Override
-    public Cart removeOneItemFromTheCart(Long cartId, Long itemId) {
+    public Cart removeOneUnityItemFromCart(Long cartId, Long itemId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(()-> new CartNotFoundException());
         List<ItemCart> itemCartList = cart.getListItemCart();
         for (ItemCart itemCart : itemCartList) {
@@ -155,6 +182,25 @@ public class CartServiceImpl implements CartService {
         cart.setListItemCart(itemCartList);
         return cartRepository.save(cart);
     }
+    @Override
+    public Cart addOneUnityItemFromCart(Long cartId, Long itemId) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(()-> new CartNotFoundException());
+        List<ItemCart> itemCartList = cart.getListItemCart();
+        for (ItemCart itemCart : itemCartList) {
+            if(itemCart.getId().equals(itemId)){
+                if(itemCart.getQuantity() + 1 > itemCart.getProduct().getStockQuantity()){
+                    throw new StockQuantityNotFoundException(" Quantity requested for product " +
+                            itemCart.getProduct().getName() + " exceeds the stock quantity.");
+                }
+
+                itemCart.setQuantity(itemCart.getQuantity() + 1);
+                break;
+            }
+        }
+        cart.setListItemCart(itemCartList);
+        return cartRepository.save(cart);
+    }
+
 
     @Override
     public Cart removeItemFromCart(Long cartId, Long itemId) {
@@ -202,7 +248,12 @@ public class CartServiceImpl implements CartService {
     @Override
     public Double calculateTotalPrice(Cart cart) {
         Double totalPrice = cart.getListItemCart().stream()
-                .mapToDouble(itemCart -> itemCart.getProduct().getPrice() * itemCart.getQuantity())
+                .mapToDouble(itemCart -> {
+                    if(!itemCart.isHasStock()) {
+                        return 0.0;
+                    }
+                    return itemCart.getProduct().getPrice() * itemCart.getQuantity();
+                })
                 .sum();
 
         if (cart.getShippingSelected() != null) {
@@ -212,6 +263,10 @@ public class CartServiceImpl implements CartService {
 
 
         return totalPrice;
+    }
+
+    public ShippingOption addShippingOption(ShippingOption shippingOption) {
+        return shippingOptionRepository.save(shippingOption);
     }
 
 
