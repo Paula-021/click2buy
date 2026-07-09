@@ -26,8 +26,19 @@ public class Order {
     private OrderStatus orderStatus;//
     private String trackingNumber;//
     private boolean paid;
+    private String currency;
+    private Double totalPrice;
 
     //private Seller seller;
+
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
     public boolean isPaid() {
         return paid;
@@ -66,13 +77,13 @@ public class Order {
         this.id = id;
     }
 
-   // public Double getTotalPrice() {
-  //      return totalPrice;
-   // }
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
 
-   // public void setTotalPrice(Double totalPrice) {
-   //     this.totalPrice = totalPrice;
-   // }
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
     public Address getDeliveryAddress() {
         return deliveryAddress;

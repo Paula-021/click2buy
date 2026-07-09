@@ -1,6 +1,7 @@
 package com.paula.click2buy.endpoints.dtos;
 
 import com.paula.click2buy.domain.*;
+import com.paula.click2buy.payments.endpoints.dtos.StripeCheckoutResponseDTO;
 
 import java.time.LocalDate;
 
@@ -15,6 +16,7 @@ public class OrderResponseDTO {
     private PaymentMethod paymentMethod;
     private CartResponseDTO cart;
     private OrderStatus orderStatus;
+    private StripeCheckoutResponseDTO stripeCheckoutResponseDTO;
 
     public OrderResponseDTO(Order order) {
        // this.totalPrice = order.getTotalPrice();
@@ -28,6 +30,13 @@ public class OrderResponseDTO {
         this.orderStatus = order.getOrderStatus();
     }
 
+    public StripeCheckoutResponseDTO getStripeCheckoutResponseDTO() {
+        return stripeCheckoutResponseDTO;
+    }
+
+    public void setStripeCheckoutResponseDTO(StripeCheckoutResponseDTO stripeCheckoutResponseDTO) {
+        this.stripeCheckoutResponseDTO = stripeCheckoutResponseDTO;
+    }
 
     public AddressResponseDTO getDeliveryAddress() {
         return deliveryAddress;

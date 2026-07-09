@@ -2,6 +2,7 @@ package com.paula.click2buy.services;
 
 
 import com.paula.click2buy.domain.Order;
+import com.paula.click2buy.endpoints.dtos.OrderResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 @Service
 public interface OrderService {
 
-    void addOrder(Order order);
+    OrderResponseDTO addOrder(Order order);
 
     List<Order> getAllOrders();
 

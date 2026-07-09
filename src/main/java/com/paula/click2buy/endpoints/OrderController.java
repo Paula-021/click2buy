@@ -1,10 +1,12 @@
 package com.paula.click2buy.endpoints;
 
+import com.paula.click2buy.domain.Address;
 import com.paula.click2buy.domain.Cart;
 import com.paula.click2buy.domain.Order;
 import com.paula.click2buy.domain.User;
 import com.paula.click2buy.endpoints.dtos.OrderRequestDTO;
 import com.paula.click2buy.endpoints.dtos.OrderResponseDTO;
+import com.paula.click2buy.services.AddressService;
 import com.paula.click2buy.services.CartService;
 import com.paula.click2buy.services.OrderService;
 import com.paula.click2buy.services.UserService;
@@ -27,19 +29,23 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private AddressService addressService;
 
     @PostMapping
     public ResponseEntity<?> addOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO) {
         // Lógica para criar o pedido com base no orderRequestDTO
         Cart cart = cartService.getCartById(orderRequestDTO.getIdCart());
+
+
         User user = userService.getUserById(orderRequestDTO.getIdUser());
+        Address address = addressService.getAddressById(orderRequestDTO.getIdAddress());
 
+        Order order = orderRequestDTO.toEntity(cart, user, address);
 
-        Order order = orderRequestDTO.toEntity(cart, user);
+        OrderResponseDTO orderResponseDTO = orderService.addOrder(order);
 
-        orderService.addOrder(order);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(201).body(orderResponseDTO);
     }
 
     //somente admin
