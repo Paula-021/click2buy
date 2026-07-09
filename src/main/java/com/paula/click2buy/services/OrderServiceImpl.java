@@ -1,8 +1,12 @@
 package com.paula.click2buy.services;
 
 import com.paula.click2buy.domain.*;
+import com.paula.click2buy.endpoints.dtos.OrderResponseDTO;
+import com.paula.click2buy.exceptions.StockQuantityNotFoundException;
+import com.paula.click2buy.payments.endpoints.dtos.StripeCheckoutResponseDTO;
+import com.paula.click2buy.payments.services.CheckoutStripeService;
+import com.paula.click2buy.payments.services.CurrencyService;
 import com.paula.click2buy.repositories.OrderRepository;
-import com.paula.click2buy.shipment.dtos.ShipmentRequestDTO;
 import com.paula.click2buy.shipment.services.MelhorEnvioShipmentCalculateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +24,27 @@ public class OrderServiceImpl implements OrderService {
     private MelhorEnvioShipmentCalculateService melhorEnvioShipmentCalculateService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private CheckoutStripeService checkoutStripeService;
+
+    @Autowired
+    private CurrencyService currencyService;
 
     @Override
-    public void addOrder(Order order) {
+    public OrderResponseDTO addOrder(Order order) {
+        Cart cart = order.getCart();
+        //verificar se os items do carrinho tem estoque
+        cart.getListItemCart().forEach(item -> {
+            if(item.getQuantity() > item.getProduct().getStockQuantity()) {
+                item.setHasStock(false);
+                throw new StockQuantityNotFoundException(" Quantity requested for product " +
+                        item.getProduct().getName() + " exceeds the stock quantity.");
+            }else{
+                item.setHasStock(true);
+            }
+        });
+
+        //salvar pedido
         //chegou com deliveryAddress, paymentMethod, cart, user
 
         //expectedDate
@@ -42,8 +64,29 @@ public class OrderServiceImpl implements OrderService {
         //trackingNumber - gerar um código aleatório
         //não vai ter tranking number assim que o pedido for criado, só depois que o pedido for pago e enviado que o tracking number vai ser gerado, então o tracking number só vai ser setado quando o status do pedido for "enviado"
 
+        if(!order.getCurrency().equals("BRL")){
+            Double totalPriceConverted = currencyService.convert(order.getCurrency(), order.getCart().getTotalPriceBrl() ); //paramos aqui
+            //converter  o valor total do pedido para a moeda que o usuário escolheu para que o link de oagamento seja gerado com o valor correto, para isso, a gente pode usar a API de conversão de moedas do Melhor Envio, que é gratuita e fácil de usar. A gente faria uma requisição para a API passando a moeda de origem (BRL) e a moeda de destino (a moeda escolhida pelo usuário) e o valor total do pedido em BRL, e a API retornaria o valor convertido na moeda de destino. Aí a gente setaria esse valor convertido no pedido antes de criar a sessão de pagamento no Stripe.
+            //ou a API do bacen ou alguma outra API
+            order.setTotalPrice(totalPriceConverted);
+            System.out.println("o valor convertido foi salvo no pedido: " + totalPriceConverted);
+        }else{
+            order.setTotalPrice(order.getCart().getTotalPriceBrl());
+        }
 
-        orderRepository.save(order);
+
+
+
+        Order orderSaved = orderRepository.save(order);
+
+
+        // criar a sessao de pagamento no Stripe
+        StripeCheckoutResponseDTO stripeCheckoutResponseDTO = checkoutStripeService.checkout(order);
+
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO(orderSaved);
+        orderResponseDTO.setStripeCheckoutResponseDTO(stripeCheckoutResponseDTO);
+
+        return orderResponseDTO;
 
     }
 
