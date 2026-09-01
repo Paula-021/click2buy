@@ -6,7 +6,7 @@ public class ShipmentRequestDTO {
 
     private String sender;
     private String recipient;
-    private List<MelhorEnvioProductDTO> products;
+    private List<SuperFreteProductDTO> products;
 
     public String getSender() {
         return sender;
@@ -24,11 +24,11 @@ public class ShipmentRequestDTO {
         this.recipient = recipient;
     }
 
-    public List<MelhorEnvioProductDTO> getProducts() {
+    public List<SuperFreteProductDTO> getProducts() {
         return products;
     }
 
-    public void setProducts(List<MelhorEnvioProductDTO> products) {
+    public void setProducts(List<SuperFreteProductDTO> products) {
         this.products = products;
     }
 }

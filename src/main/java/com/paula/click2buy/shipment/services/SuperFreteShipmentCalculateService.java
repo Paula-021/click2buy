@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paula.click2buy.domain.Product;
 import com.paula.click2buy.services.ProductService;
-import com.paula.click2buy.shipment.dtos.MelhorEnvioProductDTO;
+import com.paula.click2buy.shipment.dtos.SuperFreteProductDTO;
 import com.paula.click2buy.shipment.dtos.ShipmentRequestDTO;
 import com.paula.click2buy.shipment.dtos.ShipmentResponseDTO;
-import com.paula.click2buy.shipment.utils.MelhorEnvioProperties;
+import com.paula.click2buy.shipment.utils.SuperFreteProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -20,15 +20,14 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MelhorEnvioShipmentCalculateService {
+public class SuperFreteShipmentCalculateService {
+    
 
-    @Autowired
-    private MelhorEnvioTokenService melhorEnvioTokenService;
 
     private RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
-    private MelhorEnvioProperties props;
+    private SuperFreteProperties props;
 
     @Autowired
     private ProductService productService;
@@ -36,7 +35,7 @@ public class MelhorEnvioShipmentCalculateService {
 
     public List<ShipmentResponseDTO> calculateShipment(ShipmentRequestDTO shipmentRequestDTO) throws JsonProcessingException {
 
-        String token = melhorEnvioTokenService.getAccessToken();
+        String token = props.getApiToken();
 
         // buscar produto pelo id e setar o objeto completo no shipmentRequestDTO
 
@@ -44,7 +43,7 @@ public class MelhorEnvioShipmentCalculateService {
 
         List<Map<String, Object>> products = new ArrayList<>();
 
-        for (MelhorEnvioProductDTO productDTO : shipmentRequestDTO.getProducts()){
+        for (SuperFreteProductDTO productDTO : shipmentRequestDTO.getProducts()){
 
             Product product = productService.getProductById(productDTO.getProduct().getId());
             productDTO.setProduct(product);
@@ -92,7 +91,7 @@ public class MelhorEnvioShipmentCalculateService {
                 new HttpEntity<>(body, headers);
 
         ResponseEntity<List<ShipmentResponseDTO>> response =
-                restTemplate.exchange(props.getBaseUrl() + "/api/v2/me/shipment/calculate", HttpMethod.POST, request, new ParameterizedTypeReference<List<ShipmentResponseDTO>>() {});
+                restTemplate.exchange(props.getBaseUrl() + "/calculator", HttpMethod.POST, request, new ParameterizedTypeReference<List<ShipmentResponseDTO>>() {});
 
 
         return response.getBody();
