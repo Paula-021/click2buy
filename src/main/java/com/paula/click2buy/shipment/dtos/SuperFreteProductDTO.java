@@ -2,7 +2,7 @@ package com.paula.click2buy.shipment.dtos;
 
 import com.paula.click2buy.domain.Product;
 
-public class MelhorEnvioProductDTO {
+public class SuperFreteProductDTO {
 
     private Product product;
     private Integer quantity;

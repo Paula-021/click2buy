@@ -12,10 +12,10 @@ import com.paula.click2buy.exceptions.CartNotFoundException;
 import com.paula.click2buy.exceptions.StockQuantityNotFoundException;
 import com.paula.click2buy.repositories.CartRepository;
 import com.paula.click2buy.repositories.ShippingOptionRepository;
-import com.paula.click2buy.shipment.dtos.MelhorEnvioProductDTO;
+import com.paula.click2buy.shipment.dtos.SuperFreteProductDTO;
 import com.paula.click2buy.shipment.dtos.ShipmentRequestDTO;
 import com.paula.click2buy.shipment.dtos.ShipmentResponseDTO;
-import com.paula.click2buy.shipment.services.MelhorEnvioShipmentCalculateService;
+import com.paula.click2buy.shipment.services.SuperFreteShipmentCalculateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private ProductService productService;
     @Autowired
-    private MelhorEnvioShipmentCalculateService melhorEnvioShipmentCalculateService;
+    private SuperFreteShipmentCalculateService superFreteShipmentCalculateService;
     @Autowired
     private ShippingOptionRepository shippingOptionRepository;
 
@@ -213,18 +213,18 @@ public class CartServiceImpl implements CartService {
     public List<ShipmentResponseDTO> calculateShipping(Cart cart, CartShippingCalculateRequestDTO cartShippingCalculateRequestDTO) throws JsonProcessingException {
 
         //do cart o que nos interessa é os produtos
-        List<MelhorEnvioProductDTO> melhorEnvioProductDTOList = new ArrayList<>();
+        List<SuperFreteProductDTO> superFreteProductDTOList = new ArrayList<>();
 
         List<ItemCart> listItemCart = cart.getListItemCart();
         listItemCart.forEach(itemCart -> {
             Product product = itemCart.getProduct();
             int quantity = itemCart.getQuantity();
 
-            MelhorEnvioProductDTO melhorEnvioProductDTO = new MelhorEnvioProductDTO();
-            melhorEnvioProductDTO.setProduct(product);
-            melhorEnvioProductDTO.setQuantity(quantity);
+            SuperFreteProductDTO superFreteProductDTO = new SuperFreteProductDTO();
+            superFreteProductDTO.setProduct(product);
+            superFreteProductDTO.setQuantity(quantity);
 
-            melhorEnvioProductDTOList.add(melhorEnvioProductDTO);
+            superFreteProductDTOList.add(superFreteProductDTO);
 
         });
 
@@ -234,9 +234,9 @@ public class CartServiceImpl implements CartService {
         ShipmentRequestDTO shipmentRequestDTO = new ShipmentRequestDTO();
         shipmentRequestDTO.setSender(sender);
         shipmentRequestDTO.setRecipient(recipient);
-        shipmentRequestDTO.setProducts(melhorEnvioProductDTOList);
+        shipmentRequestDTO.setProducts(superFreteProductDTOList);
 
-         List<ShipmentResponseDTO> shipmentResponseDTOList = melhorEnvioShipmentCalculateService.calculateShipment(shipmentRequestDTO);
+         List<ShipmentResponseDTO> shipmentResponseDTOList = superFreteShipmentCalculateService.calculateShipment(shipmentRequestDTO);
 
          return shipmentResponseDTOList;
 

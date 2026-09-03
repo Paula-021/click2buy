@@ -9,7 +9,7 @@ import com.paula.click2buy.endpoints.dtos.CartShippingCalculateRequestDTO;
 import com.paula.click2buy.endpoints.dtos.ShippingOptionDTO;
 import com.paula.click2buy.services.CartService;
 import com.paula.click2buy.shipment.dtos.ShipmentResponseDTO;
-import com.paula.click2buy.shipment.services.MelhorEnvioShipmentCalculateService;
+import com.paula.click2buy.shipment.services.SuperFreteShipmentCalculateService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class CartController {
     private CartService cartService;
 
     @Autowired
-    private MelhorEnvioShipmentCalculateService melhorEnvioShipmentCalculateService;
+    private SuperFreteShipmentCalculateService superFreteShipmentCalculateService;
 
     @PostMapping
     public ResponseEntity<?> addCart() { // a única função dele será abrir um carrinho (sem itens)

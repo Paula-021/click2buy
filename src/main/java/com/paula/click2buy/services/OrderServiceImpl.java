@@ -7,7 +7,7 @@ import com.paula.click2buy.payments.endpoints.dtos.StripeCheckoutResponseDTO;
 import com.paula.click2buy.payments.services.CheckoutStripeService;
 import com.paula.click2buy.payments.services.CurrencyService;
 import com.paula.click2buy.repositories.OrderRepository;
-import com.paula.click2buy.shipment.services.MelhorEnvioShipmentCalculateService;
+import com.paula.click2buy.shipment.services.SuperFreteShipmentCalculateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private MelhorEnvioShipmentCalculateService melhorEnvioShipmentCalculateService;
+    private SuperFreteShipmentCalculateService superFreteShipmentCalculateService;
     @Autowired
     private AddressService addressService;
     @Autowired
